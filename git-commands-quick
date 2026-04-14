@@ -1,0 +1,159 @@
+# Git Quick Revision (Interview and Exam)
+
+Fast, high-value Git reference with top commands and common real-world scenarios.
+
+## A) Top 30 Commands You Should Know
+
+| Command | Purpose | Typical use |
+|---|---|---|
+| `git init` | Initialize local repository. | Start a new project with Git. |
+| `git clone <url>` | Copy remote repository locally. | Begin working on an existing project. |
+| `git status` | Show changed/staged/untracked files. | Check current state before actions. |
+| `git add <file>` | Stage one file. | Commit selected changes only. |
+| `git add .` | Stage all changes. | Commit all current local work. |
+| `git commit -m "msg"` | Create commit with message. | Save logical chunk of work. |
+| `git commit --amend` | Edit latest commit. | Fix last message or missed file. |
+| `git log --oneline --graph --decorate --all -n 20` | Compact graph history. | Understand branch/merge flow quickly. |
+| `git diff` | Show unstaged changes. | Review edits before staging. |
+| `git diff --staged` | Show staged changes. | Verify what will be committed. |
+| `git branch` | List branches. | See available local branches. |
+| `git switch <branch>` | Switch to existing branch. | Move between tasks. |
+| `git switch -c <branch>` | Create and switch branch. | Start a new feature branch. |
+| `git merge <branch>` | Merge target branch into current. | Integrate work from another branch. |
+| `git rebase origin/main` | Replay commits on latest main. | Keep feature branch linear. |
+| `git rebase --continue` | Continue rebase after conflict fix. | Finish interrupted rebase. |
+| `git rebase --abort` | Cancel rebase operation. | Rebase went wrong. |
+| `git pull origin main` | Fetch + merge main. | Sync local branch with remote main. |
+| `git fetch origin` | Download refs only. | Check remote updates safely first. |
+| `git push origin main` | Push local main commits. | Publish latest main changes. |
+| `git push -u origin <branch>` | Push and set upstream. | First push of a new branch. |
+| `git remote -v` | Show remotes and URLs. | Verify repository endpoint. |
+| `git remote set-url origin <url>` | Change origin URL. | Move repo to new owner/server. |
+| `git stash` | Temporarily shelve changes. | Urgent branch switch. |
+| `git stash pop` | Restore latest stash and remove. | Continue shelved work. |
+| `git restore --staged <file>` | Unstage file. | Staged by mistake. |
+| `git restore <file>` | Discard unstaged file edits. | Revert local accidental edit. |
+| `git reflog` | Show HEAD movement history. | Recover lost commits/branch tips. |
+| `git reset --soft HEAD~1` | Undo commit, keep staged changes. | Rewrite last commit cleanly. |
+| `git reset --hard HEAD~1` | Undo commit and discard local changes. | Last resort cleanup (dangerous). |
+
+## B) Most Asked Practical Scenarios
+
+### 1) "origin already exists" while adding remote
+
+```bash
+git remote -v
+git remote set-url origin https://github.com/harishmsgit/Container-Orchestration-Scaling.git
+git remote -v
+```
+
+Use when:
+- Remote is already configured but points to wrong URL.
+
+### 2) Create feature branch and push first time
+
+```bash
+git switch -c feature/login-rate-limit
+git add .
+git commit -m "feat: add login rate limiter"
+git push -u origin feature/login-rate-limit
+```
+
+Use when:
+- Starting a new task and publishing branch for PR.
+
+### 3) Bring latest main into your feature branch
+
+Merge approach:
+```bash
+git switch main
+git pull origin main
+git switch feature/login-rate-limit
+git merge main
+```
+
+Rebase approach:
+```bash
+git switch feature/login-rate-limit
+git fetch origin
+git rebase origin/main
+```
+
+Use when:
+- Main has moved ahead and you need current codebase.
+
+### 4) Accidentally committed on main
+
+```bash
+git switch -c feature/move-main-commit
+git switch main
+git reset --hard HEAD~1
+git switch feature/move-main-commit
+```
+
+Use when:
+- Commit should have gone to feature branch, not main.
+
+### 5) Undo last commit but keep code
+
+```bash
+git reset --soft HEAD~1
+```
+
+Use when:
+- Commit message/content needs correction before pushing.
+
+### 6) Recover lost commit using reflog
+
+```bash
+git reflog
+git checkout <lost-commit-hash>
+git switch -c recovery-branch
+```
+
+Use when:
+- Commit seems missing after reset/rebase.
+
+### 7) Save temporary work and switch urgently
+
+```bash
+git stash push -m "wip: stream buffering fix"
+git switch main
+# do urgent work
+git switch feature/stream-fix
+git stash pop
+```
+
+Use when:
+- Mid-work interruption requires immediate context switch.
+
+### 8) Clean untracked generated files
+
+```bash
+git clean -fd
+```
+
+Use when:
+- Build/temp files clutter workspace.
+
+## C) Fast Interview Notes
+
+- `merge` keeps branch history with explicit merge commit.
+- `rebase` rewrites commit base for linear history.
+- `fetch` is safe sync (download only), `pull` is fetch + integrate.
+- `reflog` is your best recovery tool after mistakes.
+- Avoid `reset --hard` unless you are 100 percent sure.
+
+## D) Minimal Daily Workflow
+
+```bash
+git status
+git switch -c feature/my-task
+git add .
+git commit -m "feat: implement my task"
+git fetch origin
+git rebase origin/main
+git push -u origin feature/my-task
+```
+
+This file is optimized for quick revision and practical command recall.

@@ -1,0 +1,137 @@
+# Git One-Page Cheat Sheet
+
+Ultra-compact reference for daily development and interviews.
+
+## 1) Setup
+
+git --version                          # Verify Git installation
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+
+## 2) Start Work
+
+git clone <repo-url>                  # Copy remote repo
+git switch -c feature/<name>          # Create and switch to feature branch
+git status                             # Check current state
+
+## 3) Save Work
+
+git add .                              # Stage all changes
+git commit -m "feat: message"         # Commit staged changes
+git push -u origin feature/<name>      # First push and set upstream
+
+## 4) Sync Safely
+
+git fetch --all --prune                # Download updates only
+git rebase origin/main                 # Rebase feature on latest main
+# Alternative:
+# git pull origin main                 # Fetch + merge
+
+## 5) Remote Commands
+
+git remote -v
+git remote add origin <repo-url>
+git remote set-url origin <new-url>
+
+Common fix (origin already exists):
+git remote set-url origin https://github.com/harishmsgit/Container-Orchestration-Scaling.git
+
+## 6) Undo and Recovery
+
+git restore --staged <file>            # Unstage file
+git restore <file>                     # Discard unstaged file edits
+git reset --soft HEAD~1                # Undo last commit, keep changes
+git reflog                             # Recover lost commit references
+
+Danger zone:
+git reset --hard HEAD~1                # Deletes local tracked changes
+
+## 7) Stash for Interruptions
+
+git stash push -m "wip: note"
+git stash list
+git stash pop
+
+## 8) Branch Cleanup
+
+git branch -d <branch>                 # Delete merged local branch
+git push origin --delete <branch>      # Delete remote branch
+
+## 9) Merge and Rebase Conflict Flow
+
+During rebase conflict:
+1. Fix files
+2. git add <resolved-file>
+3. git rebase --continue
+4. If needed: git rebase --abort
+
+During merge conflict:
+1. Fix files
+2. git add <resolved-file>
+3. git merge --continue
+4. If needed: git merge --abort
+
+## 10) Interview Quick Recall
+
+- fetch vs pull: fetch only downloads; pull downloads and integrates.
+- merge vs rebase: merge preserves branch structure; rebase creates linear history.
+- reflog is the recovery safety net.
+- prefer small commits with clear commit messages.
+
+## 11) 30-Second Daily Routine
+
+1. git status
+2. git fetch --all --prune
+3. git rebase origin/main
+4. git add .
+5. git commit -m "type: concise message"
+6. git push -u origin feature/<name>
+
+## 12) Requested Commands
+
+Undo last commit (choose based on need):
+
+git reset --soft HEAD~1                # Undo commit, keep code staged
+git reset --mixed HEAD~1               # Undo commit, keep code unstaged
+git reset --hard HEAD~1                # Undo commit, delete local changes
+
+If last commit was already pushed and you want safe undo:
+
+git revert HEAD                         # Create new commit that reverses last commit
+
+If you want to overwrite remote history (careful):
+
+git reset --hard HEAD~1
+git push --force-with-lease origin <branch>
+
+Cherry-pick a particular commit:
+
+git log --oneline                       # Find required commit hash
+git switch <target-branch>
+git cherry-pick <commit-hash>
+
+Cherry-pick multiple commits:
+
+git cherry-pick a1b2c3d e4f5g6h 9a0b1c2
+
+Real example:
+git switch release/v1.2.0
+git cherry-pick 3f91a2b 8c74d10 b5e6f33
+
+Cherry-pick a commit range:
+
+git cherry-pick 4d2a1f0^..7b8c9d1
+
+Real example:
+git switch hotfix/login-errors
+git cherry-pick 21ac9f4^..5e7bd32
+
+If cherry-pick gets conflicts:
+
+git status
+git add backend/authService/controllers/user.controller.js
+git add frontend/src/pages/Login.js
+git cherry-pick --continue
+# If needed:
+# git cherry-pick --abort

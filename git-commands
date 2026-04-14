@@ -1,0 +1,175 @@
+# Git Commands Reference (Architect Edition)
+
+Practical command reference for team workflows. Every command includes:
+- Purpose: what the command does.
+- When to use: the exact scenario.
+- Example: ready-to-run usage.
+
+## 1) Initial Setup
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git --version` | Verify installed Git version. | During setup or troubleshooting. | `git --version` |
+| `git config --global user.name "Your Name"` | Set commit author name globally. | First-time setup on a machine. | `git config --global user.name "Harish"` |
+| `git config --global user.email "you@example.com"` | Set commit author email globally. | First-time setup on a machine. | `git config --global user.email "you@company.com"` |
+| `git config --global init.defaultBranch main` | Set default branch name for new repos. | Standardizing repo defaults. | `git config --global init.defaultBranch main` |
+| `git config --global pull.rebase false` | Keep `git pull` as merge behavior. | Teams that prefer merge commits. | `git config --global pull.rebase false` |
+| `git config --global core.autocrlf true` | Normalize line endings on Windows. | Windows development environments. | `git config --global core.autocrlf true` |
+| `git config --global fetch.prune true` | Remove stale remote-tracking branches automatically. | Keeping branch list clean. | `git config --global fetch.prune true` |
+| `git config --global rerere.enabled true` | Reuse previously solved conflicts. | Frequent rebases/merges in long-lived branches. | `git config --global rerere.enabled true` |
+
+## 2) Repository Creation
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git init` | Initialize a new local Git repository. | Starting a brand new project. | `git init` |
+| `git clone <repo-url>` | Clone remote repository locally. | Working on an existing repo. | `git clone https://github.com/org/repo.git` |
+| `git clone <repo-url> <folder-name>` | Clone into a custom folder name. | You want a different local directory name. | `git clone https://github.com/org/repo.git my-app` |
+
+## 3) Daily Inspection
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git status` | Show branch, staged, unstaged, and untracked files. | Before commit, pull, or push. | `git status` |
+| `git log --oneline --graph --decorate --all -n 20` | View compact commit graph across branches. | Quick history review and branch analysis. | `git log --oneline --graph --decorate --all -n 20` |
+| `git diff` | Show unstaged file changes. | Review local edits before staging. | `git diff` |
+| `git diff --staged` | Show staged changes only. | Validate what will be committed. | `git diff --staged` |
+
+## 4) Staging and Commits
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git add <file>` | Stage selected file changes. | Commiting only specific files. | `git add backend/authService/index.js` |
+| `git add .` | Stage all current changes recursively. | Commiting a complete local change set. | `git add .` |
+| `git commit -m "message"` | Create a commit with a message. | Recording a logical unit of work. | `git commit -m "feat: add JWT refresh endpoint"` |
+| `git commit --amend` | Modify latest commit content/message. | Fixing the previous commit before push. | `git commit --amend -m "fix: correct middleware import"` |
+
+## 5) Sync with Remote
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git pull origin main` | Fetch and merge remote `main` into local branch. | Bring local branch up to date. | `git pull origin main` |
+| `git push origin main` | Push local `main` commits to origin. | Publishing `main` updates. | `git push origin main` |
+| `git push -u origin <branch>` | Push branch and set upstream tracking. | First push of a new branch. | `git push -u origin feature/chat-pagination` |
+| `git fetch origin` | Fetch remote refs without modifying working branch. | Check remote updates safely. | `git fetch origin` |
+| `git fetch --all --prune` | Fetch all remotes and remove stale refs. | Multi-remote repos or regular cleanup. | `git fetch --all --prune` |
+
+## 6) Branch Management
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git branch` | List local branches. | Inspect local branch state. | `git branch` |
+| `git branch <branch>` | Create a new branch. | Starting a new line of work. | `git branch feature/video-search` |
+| `git switch <branch>` | Switch to an existing branch. | Moving between tasks/branches. | `git switch main` |
+| `git switch -c <branch>` | Create and switch to a branch in one step. | Start feature quickly from current point. | `git switch -c feature/payment-webhook` |
+| `git branch -d <branch>` | Delete local branch already merged. | Cleanup after merge. | `git branch -d feature/video-search` |
+| `git push origin --delete <branch>` | Delete a branch on remote. | Cleanup remote after PR merge. | `git push origin --delete feature/video-search` |
+| `git branch --set-upstream-to=origin/main main` | Set upstream tracking branch. | Fixing tracking configuration. | `git branch --set-upstream-to=origin/main main` |
+
+Recommended branch naming:
+- `feature/<ticket>-<short-name>`
+- `bugfix/<ticket>-<short-name>`
+- `hotfix/<ticket>-<short-name>`
+- `chore/<short-name>`
+
+## 7) Remote Management
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git remote -v` | Show remotes and URLs. | Verify current remote endpoints. | `git remote -v` |
+| `git remote add origin <repo-url>` | Add new remote named `origin`. | Repository has no remote yet. | `git remote add origin https://github.com/org/repo.git` |
+| `git remote set-url origin <new-repo-url>` | Update existing origin URL. | Switching repository ownership/location. | `git remote set-url origin https://github.com/harishmsgit/Container-Orchestration-Scaling.git` |
+| `git remote rename origin upstream` | Rename a remote key. | Adopting fork workflow naming. | `git remote rename origin upstream` |
+| `git remote remove <name>` | Remove remote configuration. | Removing unused remotes. | `git remote remove upstream` |
+
+## 8) Merge, Rebase, and Conflicts
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git merge main` | Merge `main` into current branch. | Bringing latest base into feature branch. | `git merge main` |
+| `git rebase origin/main` | Reapply your commits on latest `origin/main`. | Keeping linear history before PR. | `git rebase origin/main` |
+| `git rebase --continue` | Continue rebase after conflict resolution. | After editing conflicted files. | `git rebase --continue` |
+| `git merge --continue` | Continue merge after conflict resolution. | Completing an interrupted merge. | `git merge --continue` |
+| `git rebase --abort` | Cancel and roll back current rebase. | Rebase became risky or incorrect. | `git rebase --abort` |
+| `git merge --abort` | Cancel and roll back current merge. | Merge resolution goes wrong. | `git merge --abort` |
+
+## 9) Stash and Context Switching
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git stash` | Temporarily store current uncommitted changes. | Need to switch branches quickly. | `git stash` |
+| `git stash push -m "message"` | Save stash with meaningful label. | Multiple stashes need identification. | `git stash push -m "wip: payment retries"` |
+| `git stash list` | List all stash entries. | Find a previously saved work snapshot. | `git stash list` |
+| `git stash show -p stash@{0}` | Show full patch for a stash. | Review stash before applying. | `git stash show -p stash@{0}` |
+| `git stash pop` | Apply latest stash and remove it. | Resume latest shelved work. | `git stash pop` |
+| `git stash apply stash@{0}` | Apply stash without deleting it. | Reuse the same stash in multiple branches. | `git stash apply stash@{0}` |
+| `git stash drop stash@{0}` | Delete one stash entry. | Cleanup after stash is no longer needed. | `git stash drop stash@{0}` |
+
+## 10) Undo and Recovery
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git restore --staged <file>` | Unstage a file but keep edits. | Staged by mistake before commit. | `git restore --staged frontend/src/App.js` |
+| `git restore <file>` | Discard unstaged changes in a file. | Throw away local edits in one file. | `git restore frontend/src/App.js` |
+| `git reflog` | Show HEAD movement log for recovery. | Recover lost commit/branch pointers. | `git reflog` |
+| `git checkout <commit> -- <file>` | Restore one file from old commit. | Bring back prior file version only. | `git checkout a1b2c3d -- README.md` |
+| `git reset --soft HEAD~1` | Move HEAD back one commit, keep staged changes. | Rebuild last commit message/content. | `git reset --soft HEAD~1` |
+| `git reset --mixed HEAD~1` | Move HEAD back one commit, keep unstaged changes. | Uncommit and re-stage selectively. | `git reset --mixed HEAD~1` |
+| `git reset --hard HEAD~1` | Move HEAD back and discard local tracked changes. | Only when certain you must drop changes. | `git reset --hard HEAD~1` |
+
+## 11) History Analysis
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git log` | Show detailed commit history. | General auditing and review. | `git log` |
+| `git log --stat` | Show history with per-file change summary. | Understand file-level impact by commit. | `git log --stat` |
+| `git log --name-only` | Show changed file names for each commit. | Track file touch history quickly. | `git log --name-only` |
+| `git show <commit>` | Show one commit message, metadata, and diff. | Deep dive a specific change. | `git show a1b2c3d` |
+| `git blame <file>` | Display last commit for each line. | Identify change ownership/root cause. | `git blame backend/chatService/index.js` |
+| `git bisect start` | Start binary search for bad commit. | Regressions where culprit commit is unknown. | `git bisect start` |
+| `git bisect bad` | Mark current commit as bad in bisect session. | Current tested commit reproduces bug. | `git bisect bad` |
+| `git bisect good <known-good-commit>` | Mark known good commit in bisect. | Establish lower bound for bug search. | `git bisect good a1b2c3d` |
+
+## 12) Tags and Releases
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git tag` | List all tags. | Check existing release markers. | `git tag` |
+| `git tag v1.0.0` | Create lightweight tag. | Internal milestone tags. | `git tag v1.0.0` |
+| `git tag -a v1.0.0 -m "Release v1.0.0"` | Create annotated tag with metadata. | Official releases. | `git tag -a v1.0.0 -m "Release v1.0.0"` |
+| `git push origin v1.0.0` | Push one tag to remote. | Publish one specific release tag. | `git push origin v1.0.0` |
+| `git push origin --tags` | Push all local tags. | Publish all missing tags in bulk. | `git push origin --tags` |
+
+## 13) Collaboration and Maintenance
+
+| Command | Purpose | When to use | Example |
+|---|---|---|---|
+| `git cherry-pick <commit>` | Apply one commit onto current branch. | Port a fix without merging full branch. | `git cherry-pick a1b2c3d` |
+| `git rm --cached <file>` | Stop tracking a file but keep local copy. | Move tracked file to `.gitignore` workflow. | `git rm --cached .env` |
+| `git clean -fd` | Remove untracked files and directories. | Reset workspace clutter from generated files. | `git clean -fd` |
+
+## 14) Conventional Commit Message Examples
+
+```text
+feat: add adaptive bitrate selector
+fix: prevent null pointer in video metadata parsing
+docs: update setup instructions for docker compose
+refactor: split auth middleware for admin and user routes
+test: add integration test for streaming endpoint
+chore: bump express to latest patch
+```
+
+## 15) Architect-Level Best Practices
+
+- Commit small, logically grouped changes.
+- Prefer pull requests over direct pushes to `main`.
+- Rebase feature branches on latest `main` before opening PR.
+- Protect `main` and release branches with required checks.
+- Require CI pass and at least one reviewer approval.
+- Tag production releases and maintain release notes.
+- Never commit secrets; use environment variables and secret managers.
+- Use `git reflog` first when recovering missing commits.
+
+---
+
+This reference is optimized for production-ready team workflows.
